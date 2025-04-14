@@ -104,7 +104,9 @@
                             <th scope="col" class="px-4 py-3">Precio</th>
                             <th scope="col" class="px-4 py-3">Estado</th>
                             <th scope="col" class="px-4 py-3">Portada</th>
-                            <th scope="col" class="px-4 py-3">Acciones</th>
+                            @if (auth()->user()->rol === 'admin')
+                                <th scope="col" class="px-4 py-3">Acciones</th>
+                            @endif
                             <th scope="col" class="px-4 py-3">Agregar al Carrito</th>
                         </tr>
                     </thead>
@@ -159,6 +161,7 @@
                                     N/A
                                 @endif
                             </td>
+                            @if (auth()->user()->rol === 'admin')
                             <td>
                                 <div class="flex flex-col space-y-2">
                                     <!-- Botón para editar -->
@@ -172,6 +175,7 @@
                                     </form>
                                 </div>
                             </td>
+                            @endif
                             <td>
                                 <form action="{{ route('carrito.agregar') }}" method="POST">
                                     @csrf
