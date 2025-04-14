@@ -105,6 +105,7 @@
                             <th scope="col" class="px-4 py-3">Estado</th>
                             <th scope="col" class="px-4 py-3">Portada</th>
                             <th scope="col" class="px-4 py-3">Acciones</th>
+                            <th scope="col" class="px-4 py-3">Agregar al Carrito</th>
                         </tr>
                     </thead>
                     <tbody>
