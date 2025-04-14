@@ -171,6 +171,14 @@
                                     </form>
                                 </div>
                             </td>
+                            <td>
+                                <form action="{{ route('carrito.agregar') }}" method="POST">
+                                    @csrf
+                                    <input type="hidden" name="libro_id" value="{{ $libro->id }}">
+                                    <input type="number" name="cantidad" value="1" min="1" class="w-16 border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                                    <button type="submit" class="text-white bg-green-600 hover:bg-green-700 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-3 py-1.5 text-center dark:bg-green-500 dark:hover:bg-green-600 dark:focus:ring-green-800">Agregar</button>
+                                </form>
+                            </td>
                         </tr>
                         
                         @endforeach
