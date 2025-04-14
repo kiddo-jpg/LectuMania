@@ -8,7 +8,7 @@
 <div class="max-w-4xl mx-auto mt-10">
     <h1 class="text-2xl font-bold text-center mb-5 text-gray-800 dark:text-white">Carrito de Compras</h1>
 
-    @if (count($items) > 0)
+    @if ($carrito && $carrito->items->count() > 0)
         <div class="bg-white shadow-md rounded-lg overflow-hidden dark:bg-gray-800">
             <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
                 <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
@@ -21,14 +21,14 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ($items as $item)
+                    @foreach ($carrito->items as $item)
                         <tr class="border-b dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700">
-                            <td class="px-4 py-3">{{ $item['producto'] }}</td>
-                            <td class="px-4 py-3">{{ $item['cantidad'] }}</td>
-                            <td class="px-4 py-3">${{ number_format($item['precio'], 2) }}</td>
-                            <td class="px-4 py-3">${{ number_format($item['cantidad'] * $item['precio'], 2) }}</td>
+                            <td class="px-4 py-3">{{ $item->libro->titulo }}</td>
+                            <td class="px-4 py-3">{{ $item->cantidad }}</td>
+                            <td class="px-4 py-3">${{ number_format($item->precio, 2) }}</td>
+                            <td class="px-4 py-3">${{ number_format($item->cantidad * $item->precio, 2) }}</td>
                             <td class="px-4 py-3">
-                                <form action="#" method="POST">
+                                <form action="{{ route('carrito.eliminar', $item->id) }}" method="POST">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" class="text-white bg-red-600 hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-3 py-1.5 text-center dark:bg-red-500 dark:hover:bg-red-600 dark:focus:ring-red-800">Eliminar</button>
