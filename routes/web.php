@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UsuariosController;
 use App\Http\Controllers\LibrosController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CarritoController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -16,6 +17,7 @@ Route::post('/ingresar', [UsuariosController::class, 'store'])->name('usuarios.s
 
 
 Route::get('/libros', [LibrosController::class, 'index'])->name('libros.index')->middleware('auth');
+Route::get('/carrito', [CarritoController::class, 'index'])->name('carrito.index');
 Route::get('/libros/create', [LibrosController::class, 'create'])->name('libros.create');
 Route::post('/libros', [LibrosController::class, 'store'])->name('libros.store');
 Route::get('/libros/{id}/edit', [LibrosController::class, 'edit'])->name('libros.edit');
