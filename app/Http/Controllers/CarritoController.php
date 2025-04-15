@@ -4,17 +4,19 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use App\Models\Usuarios; // Asegúrate de importar el modelo Usuarios
+use Illuminate\Support\Facades\DB; // Importar el facade DB
 use App\Models\Libros; // Importar el modelo Libro
+use App\Models\Usuarios; // Asegúrate de importar el modelo Usuarios
+use App\Models\Carrito;
+use App\Models\CarritoItem; // Asegúrate de importar el modelo CarritoItem
 
 class CarritoController extends Controller
 {
     public function index()
     {
-        // Obtener el carrito del usuario autenticado
-        $carrito = \App\Models\Carrito::with('items.libro')->where('usuario_id', Auth::id())->first();
+        // Obtener el carrito del usuario autenticado con sus items y libros
+        $carrito = Carrito::with('items.libro')->where('usuario_id', Auth::id())->first();
 
-        // Retornar la vista del carrito con los datos
         return view('carrito.index', compact('carrito'));
     }
 
@@ -22,48 +24,45 @@ class CarritoController extends Controller
     {
         // Validar los datos enviados
         $request->validate([
-            'libro_id' => 'required|exists:libros,id', // Asegúrate de que el libro exista
-            'cantidad' => 'required|integer|min:1',   // La cantidad debe ser al menos 1
+            'libro_id' => 'required|exists:libros,id',
+            'cantidad' => 'required|integer|min:1',
         ]);
 
-        // Obtener el carrito del usuario autenticado o crearlo si no existe
-        $carrito = \App\Models\Carrito::firstOrCreate(
-            ['usuario_id' => Auth::id()],
-            ['created_at' => now(), 'updated_at' => now()]
-        );
+        // Buscar el libro en la base de datos
+        $libro = Libros::findOrFail($request->libro_id);
 
-        // Verificar si el ítem ya está en el carrito
-        $item = \App\Models\CarritoItem::where('carrito_id', $carrito->id)
-            ->where('libro_id', $request->libro_id)
-            ->first();
-
-        if ($item) {
-            // Si ya está, incrementar la cantidad
-            $item->cantidad += $request->cantidad;
-            $item->save();
-        } else {
-            // Si no está, agregarlo al carrito
-            \App\Models\CarritoItem::create([
-                'carrito_id' => $carrito->id,
-                'libro_id' => $request->libro_id,
-                'cantidad' => $request->cantidad,
-                'precio' => Libros::find($request->libro_id)->precio,
-            ]);
+        // Verificar si hay suficientes ejemplares disponibles
+        if ($libro->numeroEjemplares < $request->cantidad) {
+            return back()->withErrors(['error' => 'No hay suficientes ejemplares disponibles.']);
         }
 
-        // Redirigir al carrito con un mensaje de éxito
-        return redirect()->route('carrito.index')->with('success', 'Libro agregado al carrito exitosamente.');
-    }
+        // Obtener o crear el carrito del usuario autenticado
+        $carrito = Carrito::firstOrCreate(['usuario_id' => Auth::id()]);
 
+        // Agregar o actualizar el libro en carrito_items
+        $item = CarritoItem::updateOrCreate(
+            ['carrito_id' => $carrito->id, 'libro_id' => $libro->id],
+            ['cantidad' => DB::raw('cantidad + ' . $request->cantidad), 'precio' => $libro->precio]
+        );
+
+        // Disminuir el número de ejemplares disponibles
+        $libro->numeroEjemplares -= $request->cantidad;
+        $libro->save();
+
+        return back()->with('success', 'Libro agregado al carrito correctamente.');
+    }
     public function eliminar($id)
     {
-        // Buscar el ítem en la base de datos
-        $item = \App\Models\CarritoItem::findOrFail($id);
+        $item = CarritoItem::findOrFail($id);
 
-        // Eliminar el ítem
+        // Restaurar los ejemplares al eliminar del carrito
+        $libro = Libros::findOrFail($item->libro_id);
+        $libro->numeroEjemplares += $item->cantidad;
+        $libro->save();
+
+        // Eliminar el item del carrito
         $item->delete();
 
-        // Redirigir al carrito con un mensaje de éxito
-        return redirect()->route('carrito.index')->with('success', 'Ítem eliminado del carrito exitosamente.');
+        return back()->with('success', 'Libro eliminado del carrito correctamente.');
     }
 }

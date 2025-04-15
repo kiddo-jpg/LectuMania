@@ -184,7 +184,7 @@
                                 <form action="{{ route('carrito.agregar') }}" method="POST">
                                     @csrf
                                     <input type="hidden" name="libro_id" value="{{ $libro->id }}">
-                                    <input type="number" name="cantidad" value="1" min="1" class="w-16 border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                                    <input type="number" name="cantidad" value="1" min="1" max="{{ $libro->numeroEjemplares }}" class="w-16 border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
                                     <button type="submit" class="text-white bg-green-600 hover:bg-green-700 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-3 py-1.5 text-center dark:bg-green-500 dark:hover:bg-green-600 dark:focus:ring-green-800">Agregar</button>
                                 </form>
                             </td>
@@ -240,6 +240,33 @@
         </div>
     </div>
   </section>
+
+@if ($errors->any())
+    <div class="p-4 mb-4 text-sm text-red-700 bg-red-100 rounded-lg dark:bg-red-200 dark:text-red-800">
+        @foreach ($errors->all() as $error)
+            <p>{{ $error }}</p>
+        @endforeach
+    </div>
+@endif
+
+
+@if (session('success'))
+    <div id="successMessage" class="p-4 mb-4 text-sm text-green-700 bg-green-100 rounded-lg dark:bg-green-200 dark:text-green-800">
+        {{ session('success') }}
+    </div>
+@endif
+
+<script>
+    // Ocultar el mensaje de éxito después de 5 segundos
+    document.addEventListener('DOMContentLoaded', function () {
+        const successMessage = document.getElementById('successMessage');
+        if (successMessage) {
+            setTimeout(() => {
+                successMessage.style.display = 'none';
+            }, 5000); // 5000 ms = 5 segundos
+        }
+    });
+</script>
 
   <main>
 </main>

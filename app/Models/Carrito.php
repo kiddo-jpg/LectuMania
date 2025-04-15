@@ -8,15 +8,10 @@ class Carrito extends Model
 {
     use HasFactory;
 
-    protected $fillable = [
-        'usuario_id',
-        'created_at',
-        'updated_at',
-    ];
+    protected $fillable = ['usuario_id'];
 
     public function items()
     {
-        return $this->hasMany(CarritoItem::class);
+        return $this->hasMany(CarritoItem::class, 'carrito_id');
     }
-    
 }

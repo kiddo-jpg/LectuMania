@@ -6,30 +6,27 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    
     public function up(): void
     {
         Schema::dropIfExists('libros'); // Eliminar la tabla si existe
         Schema::create('libros', function (Blueprint $table) {
-            $table->id();
-            $table->string('titulo');
-            $table->string('autor');
-            $table->string('editorial');
-            $table->integer('isbn');
-            $table->integer('anio');
-            $table->integer('paginas');
-            $table->string('genero');
-            $table->string('idioma');
-            $table->integer('numeroEjemplares');
-            $table->integer('precio');
-            $table->integer('estado');
-            $table->string('portada')->nullable(); 
-            $table->timestamps(); // Agrega automáticamente created_at y updated_at
+            $table->id(); // bigint(20) UNSIGNED NOT NULL
+            $table->string('titulo'); // varchar(255) NOT NULL
+            $table->string('autor'); // varchar(255) NOT NULL
+            $table->string('editorial'); // varchar(255) NOT NULL
+            $table->string('isbn'); // varchar(255) NOT NULL
+            $table->integer('anio'); // int(11) NOT NULL
+            $table->integer('paginas'); // int(11) NOT NULL
+            $table->string('genero'); // varchar(255) NOT NULL
+            $table->string('idioma'); // varchar(255) NOT NULL
+            $table->integer('numeroEjemplares'); // int(11) NOT NULL
+            $table->integer('precio'); // int(11) NOT NULL
+            $table->integer('estado')->default(1); // int(11) NOT NULL DEFAULT 1
+            $table->string('portada')->nullable(); // varchar(255) DEFAULT NULL
+            $table->timestamps(0); // created_at y updated_at como timestamp NULL DEFAULT NULL
         });
     }
-    /**
-     * Reverse the migrations.
-     */
+
     public function down(): void
     {
         Schema::dropIfExists('libros');

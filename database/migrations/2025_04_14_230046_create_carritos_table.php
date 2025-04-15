@@ -9,13 +9,11 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('carritos', function (Blueprint $table) {
-            $table->id(); // id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY
-            $table->unsignedBigInteger('usuario_id');
-            $table->timestamps(); // created_at y updated_at con valores por defecto
-
-            $table->foreign('usuario_id')
-                  ->references('id')->on('usuarios')
-                  ->onDelete('cascade');
+            $table->id();
+            $table->unsignedBigInteger('usuario_id'); // Relación con el usuario
+            $table->timestamps();
+        
+            $table->foreign('usuario_id')->references('id')->on('usuarios')->onDelete('cascade');
         });
     }
 
