@@ -17,6 +17,13 @@ class UsuariosController extends Controller
         return view('usuarios.index'); // Retorna una vista con el formulario para ingresar usuarios
     }
 
+    public function tabla()
+    {
+        $usuarios = Usuarios::all(); // Obtener todos los usuarios de la base de datos
+        return view('usuarios.tablausuarios', compact('usuarios')); // Pasar los usuarios a la vista
+    }
+
+
     public function store(Request $request)
     {
         // Validación de datos

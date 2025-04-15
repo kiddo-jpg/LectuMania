@@ -26,9 +26,15 @@ Route::get('/libros/{id}/edit', [LibrosController::class, 'edit'])->name('libros
 Route::put('/libros/{id}', [LibrosController::class, 'update'])->name('libros.update');
 Route::delete('/libros/{id}', [LibrosController::class, 'destroy'])->name('libros.destroy');
 
+Route::get('/usuarios/tablausuarios', [UsuariosController::class, 'tabla'])->name('usuarios.tablausuarios');
+//Route::get('/usuarios', [UsuariosController::class, 'tabla'])->name('usuarios.tablausuarios')->middleware('auth');
+Route::get('/usuarios/{id}/edit', [UsuariosController::class, 'edit'])->name('usuarios.edit');
+
 Route::get('/perfil', [AuthController::class, 'perfil'])->name('perfil')->middleware('auth');
 Route::post('/perfil', [AuthController::class, 'updatePerfil'])->name('perfil.update')->middleware('auth');
 Route::delete('/perfil', [AuthController::class, 'eliminarCuenta'])->name('perfil.eliminar')->middleware('auth');
+
+Route::resource('usuarios', UsuariosController::class)->only(['index', 'create', 'store', 'edit', 'update', 'destroy']);
 
 // Ruta para mostrar el formulario de inicio de sesión
 Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
