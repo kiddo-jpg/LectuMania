@@ -35,6 +35,8 @@ Route::post('/perfil', [AuthController::class, 'updatePerfil'])->name('perfil.up
 Route::delete('/perfil', [AuthController::class, 'eliminarCuenta'])->name('perfil.eliminar')->middleware('auth');
 
 Route::resource('usuarios', UsuariosController::class)->only(['index', 'create', 'store', 'edit', 'update', 'destroy']);
+Route::get('/usuarios/create', [UsuariosController::class, 'create'])->name('usuarios.create');
+Route::post('/usuarios', [UsuariosController::class, 'store'])->name('usuarios.store');
 
 // Ruta para mostrar el formulario de inicio de sesión
 Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');

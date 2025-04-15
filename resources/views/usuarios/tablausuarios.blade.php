@@ -10,6 +10,13 @@
 <section class="bg-gray-50 dark:bg-gray-900 py-3 sm:py-5">
     <div class="px-4 mx-auto max-w-screen-2xl lg:px-12">
         <div class="relative overflow-hidden bg-white shadow-md dark:bg-gray-800 sm:rounded-lg">
+            <div class="flex justify-between items-center p-4">
+                <h2 class="text-lg font-bold text-gray-800 dark:text-white">Lista de Usuarios</h2>
+                <!-- Botón para agregar usuario -->
+                <a href="{{ route('usuarios.create') }}" class="text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-500 dark:hover:bg-blue-600 dark:focus:ring-blue-800">
+                    Agregar Usuario
+                </a>
+            </div>
             <div class="overflow-x-auto">
                 <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
                     <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
