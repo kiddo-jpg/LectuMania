@@ -25,6 +25,14 @@ class AuthController extends Controller
             'password' => 'required',
         ]);
 
+        // Verificar si el usuario existe y está inactivo
+        $user = \App\Models\Usuarios::where('email', $request->email)->first();
+        if ($user && $user->estado === 0) {
+            return back()->withErrors([
+                'email' => 'Tu cuenta está inactiva. Por favor, contacta al administrador.',
+            ]);
+        }
+
         // Intentar autenticar al usuario
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate(); // Regenerar la sesión para evitar ataques de fijación de sesión

@@ -25,4 +25,35 @@
 <main>
 </main>
 
+<!-- Ventana emergente para errores -->
+@if ($errors->any())
+    <div id="errorModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+        <div class="bg-white rounded-lg shadow-lg p-6 max-w-sm w-full">
+            <h2 class="text-lg font-bold text-red-600 mb-4">Error</h2>
+            <ul class="text-sm text-gray-700">
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+            <div class="mt-4 flex justify-end">
+                <button id="closeModal" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">Cerrar</button>
+            </div>
+        </div>
+    </div>
+@endif
+
+<script>
+    // Cerrar la ventana emergente
+    document.addEventListener('DOMContentLoaded', function () {
+        const closeModal = document.getElementById('closeModal');
+        const errorModal = document.getElementById('errorModal');
+
+        if (closeModal && errorModal) {
+            closeModal.addEventListener('click', function () {
+                errorModal.style.display = 'none';
+            });
+        }
+    });
+</script>
+
 @endsection
