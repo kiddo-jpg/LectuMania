@@ -18,7 +18,13 @@
             <label for="password" class="block text-sm font-medium text-gray-700">Contraseña</label>
             <input type="password" name="password" id="password" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
         </div>
-        <button type="submit" class="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700">Iniciar Sesión</button>
+        <div class="flex justify-between">
+            <!-- Botón para iniciar sesión -->
+            <button type="submit" class="bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 cursor-pointer">Iniciar Sesión</button>
+        
+            <!-- Botón para ingresar usuario -->
+            <a href="{{ route('usuarios.index') }}" class="bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 cursor-pointer text-center ml-2">Ingresar Usuario</a>
+        </div>
     </form>
 </div>
 
@@ -53,6 +59,11 @@
                 errorModal.style.display = 'none';
             });
         }
+        setTimeout(function () {
+            if (errorModal) {
+                errorModal.style.display = 'none';
+            }
+        }, 5000); // Se cierra automáticamente después de 5 segundos
     });
 </script>
 
