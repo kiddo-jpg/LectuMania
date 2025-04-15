@@ -65,4 +65,38 @@ class CarritoController extends Controller
 
         return back()->with('success', 'Libro eliminado del carrito correctamente.');
     }
+
+    public function agregarTodo(Request $request)
+    {
+        // Validar que se envíen libros con cantidades válidas
+        $request->validate([
+            'libros' => 'required|array',
+            'libros.*' => 'integer|min:1', // Cada libro debe tener una cantidad mínima de 1
+        ]);
+
+        // Obtener o crear el carrito del usuario autenticado
+        $carrito = Carrito::firstOrCreate(['usuario_id' => Auth::id()]);
+
+        foreach ($request->libros as $libroId => $cantidad) {
+            // Buscar el libro en la base de datos
+            $libro = Libros::findOrFail($libroId);
+
+            // Verificar si hay suficientes ejemplares disponibles
+            if ($libro->numeroEjemplares < $cantidad) {
+                return response()->json(['success' => false, 'message' => "No hay suficientes ejemplares disponibles para el libro: {$libro->titulo}."]);
+            }
+
+            // Agregar o actualizar el libro en carrito_items
+            CarritoItem::updateOrCreate(
+                ['carrito_id' => $carrito->id, 'libro_id' => $libro->id],
+                ['cantidad' => DB::raw('cantidad + ' . $cantidad), 'precio' => $libro->precio]
+            );
+
+            // Disminuir el número de ejemplares disponibles
+            $libro->numeroEjemplares -= $cantidad;
+            $libro->save();
+        }
+
+        return response()->json(['success' => true]);
+    }
 }

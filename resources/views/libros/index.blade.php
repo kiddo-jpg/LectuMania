@@ -72,7 +72,7 @@
     <div class="px-4 mx-auto max-w-screen-2xl lg:px-12">
         <div class="relative overflow-hidden bg-white shadow-md dark:bg-gray-800 sm:rounded-lg">
             <div class="flex flex-col px-4 py-3 space-y-3 lg:flex-row lg:items-center lg:justify-between lg:space-y-0 lg:space-x-4">
-                <div class="flex flex-col flex-shrink-0 space-y-3 md:flex-row md:items-center lg:justify-end md:space-y-0 md:space-x-3">
+                <div class="flex flex-col flex-shrink-0 space-y-3 md:flex-row md:items-center lg:justify-between md:space-y-0 md:space-x-3">
                     @if (auth()->user()->rol === 'admin')
                     <a href="{{ route('libros.create') }}" class="flex items-center justify-center px-4 py-2 text-sm font-medium text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 rounded-lg focus:outline-none dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 cursor-pointer">
                         <svg class="h-3.5 w-3.5 mr-2" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
@@ -81,6 +81,14 @@
                         Añadir Nuevo Libro
                     </a>
                     @endif
+                
+                    <!-- Botón para agregar todo -->
+                    <button id="agregarTodo" class="ml-auto flex items-center justify-center px-4 py-2 text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:ring-4 focus:ring-green-300 rounded-lg focus:outline-none dark:bg-green-500 dark:hover:bg-green-600 dark:focus:ring-green-800 cursor-pointer">
+                        <svg class="h-3.5 w-3.5 mr-2" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                            <path clip-rule="evenodd" fill-rule="evenodd" d="M3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" />
+                        </svg>
+                        Agregar Todo
+                    </button>
                 </div>
             </div>
             <div class="overflow-x-auto">
@@ -265,6 +273,53 @@
                 successMessage.style.display = 'none';
             }, 5000); // 5000 ms = 5 segundos
         }
+    });
+</script>
+
+<script>
+    document.getElementById('agregarTodo').addEventListener('click', function () {
+        // Crear un objeto para almacenar los datos de los libros
+        const libros = {};
+
+        // Recorrer todos los inputs de cantidad
+        document.querySelectorAll('input[name="cantidad"]').forEach(input => {
+            const libroId = input.closest('form').querySelector('input[name="libro_id"]').value;
+            const cantidad = parseInt(input.value);
+
+            // Solo agregar si la cantidad es mayor a 0
+            if (cantidad > 0) {
+                libros[libroId] = cantidad;
+            }
+        });
+
+        // Verificar si hay libros seleccionados
+        if (Object.keys(libros).length === 0) {
+            alert('Por favor, selecciona al menos un libro para agregar al carrito.');
+            return;
+        }
+
+        // Enviar los datos al servidor mediante una solicitud POST
+        fetch("{{ route('carrito.agregarTodo') }}", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+            },
+            body: JSON.stringify({ libros })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert('Los libros seleccionados han sido agregados al carrito.');
+                location.reload(); // Recargar la página para reflejar los cambios
+            } else {
+                alert('Ocurrió un error al agregar los libros al carrito.');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Ocurrió un error al procesar la solicitud.');
+        });
     });
 </script>
 

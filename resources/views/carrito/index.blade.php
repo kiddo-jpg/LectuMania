@@ -99,6 +99,18 @@
                 </tbody>
             </table>
         </div>
+        <!-- Resumen del carrito -->
+        <div class="mt-5 bg-gray-100 p-4 rounded-lg shadow-md dark:bg-gray-800">
+            <div class="flex justify-between items-center">
+                <p class="text-lg font-semibold text-gray-700 dark:text-gray-300">Total de libros:</p>
+                <p class="text-lg font-semibold text-gray-900 dark:text-white">{{ $carrito->items->sum('cantidad') }}</p>
+            </div>
+            <div class="flex justify-between items-center mt-2">
+                <p class="text-lg font-semibold text-gray-700 dark:text-gray-300">Total a pagar:</p>
+                <p class="text-lg font-semibold text-gray-900 dark:text-white">${{ number_format($carrito->items->sum(fn($item) => $item->cantidad * $item->precio), 2) }}</p>
+            </div>
+        </div>
+
         <div class="flex justify-between items-center mt-5">
             <a href="{{ route('libros.index') }}" class="text-white bg-gray-600 hover:bg-gray-700 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-gray-500 dark:hover:bg-gray-600 dark:focus:ring-gray-800">Seguir Comprando</a>
             <button class="text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-500 dark:hover:bg-blue-600 dark:focus:ring-blue-800">Finalizar Compra</button>

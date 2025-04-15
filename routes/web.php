@@ -22,6 +22,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/carrito', [CarritoController::class, 'index'])->name('carrito.index');
     Route::post('/carrito/agregar', [CarritoController::class, 'agregar'])->name('carrito.agregar');
     Route::delete('/carrito/eliminar/{id}', [CarritoController::class, 'eliminar'])->name('carrito.eliminar');
+    Route::post('/carrito/agregar-todo', [CarritoController::class, 'agregarTodo'])->name('carrito.agregarTodo');
 });
 Route::get('/libros/create', [LibrosController::class, 'create'])->name('libros.create');
 Route::post('/libros', [LibrosController::class, 'store'])->name('libros.store');
